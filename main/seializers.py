@@ -29,13 +29,17 @@ class ProductSerializer(serializers.ModelSerializer):
         fields="__all__"
 
 
-class OrderSrializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields= "__all__"
 
 
 class OrderItemsSrializer(serializers.ModelSerializer):
+    product = ProductSerializer()
     class Meta:
         model = OrderItems
-        fields= "__all__"
+        fields= ['id','product','price','quantity']
+
+
+class OrderSrializer(serializers.ModelSerializer):
+    items =OrderItemsSrializer(many=True, read_only=True)
+    class Meta:
+        model = Order
+        fields = ['id', 'customer', 'total_price', 'ordered_at', 'items']
